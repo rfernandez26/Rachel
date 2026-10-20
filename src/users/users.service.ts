@@ -17,14 +17,14 @@ export class UsersService {
     const [result] = await this.pool().execute<ResultSetHeader>(
       `INSERT INTO users (username, password, role) VALUES (?, ?, ?)`,
       [username, hashed, role],
-    );
+  );
 
-    return { id: result.insertId, username, role };
-  }
+  return { id: result.insertId, username, role };
+}
 
   async findByUsername(username: string) {
     const [rows] = await this.pool().execute<any[]>(
-      `SELECT id, username, password, role, refresh_token FROM users WHERE username = ?`,
+      `SELECT id, username, password AS password, role, refresh_token FROM users WHERE username = ?`,
       [username],
     );
 
@@ -87,7 +87,7 @@ export class UsersService {
       [id],
     );
 
-    return { affectedRows: res.affectedRows };
+    return res.affectedRows > 0;
   }
 
   async setRefreshToken(id: number, refreshToken: string | null) {
