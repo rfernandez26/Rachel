@@ -1,5 +1,8 @@
+
+import 'dotenv/config';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { BookstoreModule } from './bookstore/bookstore.module';
@@ -12,16 +15,26 @@ import { OrderItemsModule } from './order_items/order-item.module';
 import { PaymentsModule } from './payments/payments.module';
 import { SuppliersModule } from './suppliers/suppliers.module';
 
-
 @Module({
-  imports: [ 
+  imports: [
     DatabaseModule,
+
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT || 3306),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      autoLoadEntities: true,
+      synchronize: false,
+      retryAttempts: 3,
+      retryDelay: 3000,
+    }),
+
     UsersModule,
     AuthModule,
-    CustomersModule,
-    TypeOrmModule,
     BookstoreModule,
-    AuthModule,
     AuthorsModule,
     CustomersModule,
     EmployeesModule,
